@@ -20,8 +20,8 @@ if(!location.hash){
 }
 
 const roomHash = location.hash.substring(1);
-
-const drone = new ScaleDrone('ZFdrdTJpyoYDV86r');
+const chave = 'ZFdrdTJpyoYDV86r';
+const drone = new ScaleDrone(chave);
 
 const roomName = 'observable-'+roomHash;
 
@@ -63,6 +63,9 @@ drone.on('open', error => {
     });
 
     room.on('members', members=>{
+        
+        console.log("Conectado!");
+        console.log("Conexões abertas: "+ members.length);
         number = members.length - 1;
         const isOfferer = members.length >= 2;
 
