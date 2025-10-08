@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { 
-  MdVideoCall, 
-  MdMic, 
-  MdVideocam, 
-  MdSecurity, 
-  MdDevices, 
+import {
+  MdVideoCall,
+  MdMic,
+  MdVideocam,
+  MdSecurity,
+  MdDevices,
   MdGroup,
   MdArrowForward,
-  MdAccessTime 
+  MdAccessTime,
 } from 'react-icons/md';
+import { motion } from 'framer-motion';
 
 import { generateRoomId } from '../../utils/roomUtils';
 import { CameraTest } from '../CameraTest';
@@ -38,9 +39,7 @@ export const Landing = ({ onStartCall }: LandingProps) => {
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pastedText = e.clipboardData.getData('text');
     if (pastedText.trim()) {
-      setTimeout(() => {
-        onStartCall(pastedText.trim());
-      }, 100);
+      setTimeout(() => onStartCall(pastedText.trim()), 100);
     }
   };
 
@@ -48,92 +47,69 @@ export const Landing = ({ onStartCall }: LandingProps) => {
     {
       icon: <MdVideoCall />,
       title: 'HD Calls',
-      description: 'High quality video with WebRTC technology'
+      description: 'Experience sharp, high-quality video powered by WebRTC.',
     },
     {
       icon: <MdMic />,
       title: 'Crystal Clear Audio',
-      description: 'Clear sound with noise cancellation'
+      description: 'Noise-free, crisp sound clarity for better conversations.',
     },
     {
       icon: <MdSecurity />,
       title: 'Private & Secure',
-      description: 'Encrypted P2P connection, no data on server'
+      description: 'End-to-end encrypted. No data stored on servers.',
     },
     {
       icon: <MdDevices />,
-      title: 'Multi-device',
-      description: 'Works on desktop, tablet and mobile'
+      title: 'Multi-device Ready',
+      description: 'Seamless use across desktop, tablet, and mobile.',
     },
     {
       icon: <MdGroup />,
       title: 'Instant Rooms',
-      description: 'Create or join rooms quickly'
+      description: 'Join or create rooms in just seconds.',
     },
     {
       icon: <MdAccessTime />,
-      title: 'Unlimited time',
-      description: 'Using for unlimited time without restrictions'
-    }
+      title: 'Unlimited Time',
+      description: 'Enjoy uninterrupted meetings without restrictions.',
+    },
   ];
-
-  const handleHelpClick = () => {
-    // TODO: Navigate to help page or open help modal
-    console.log('Help clicked');
-  };
-
-  const handleSettingsClick = () => {
-    // TODO: Navigate to settings page or open settings modal
-    console.log('Settings clicked');
-  };
-
-  const handleLoginClick = () => {
-    // TODO: Navigate to login page or open login modal
-    console.log('Login clicked');
-  };
 
   return (
     <div className={styles.landing}>
-      <Header 
-        onHelpClick={handleHelpClick}
-        onLoginClick={handleLoginClick}
-        onSettingsClick={handleSettingsClick}
-      />
-      
-      <div className={styles.content}>
-        <div className={styles.hero}>
-        <h1 className={styles.title}>Video calls and meetings for everyone</h1>
+      <Header />
+
+      <motion.div
+        className={styles.hero}
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        <h1 className={styles.title}>Seamless Video Meetings for Everyone</h1>
         <p className={styles.subtitle}>
-          Modern, secure and instant video chat.<br />
-          Connect with anyone, anywhere.
+          Connect securely and instantly — anytime, anywhere.
         </p>
-      </div>
+      </motion.div>
 
-      <div className={styles.features}>
-        {features.map((feature, index) => (
-          <div className={styles.feature} key={index}>
-            <div className={styles.featureIcon}>
-              {feature.icon}
-            </div>
-            <h3 className={styles.featureTitle}>{feature.title}</h3>
-            <p className={styles.featureDesc}>{feature.description}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.actions}>
+      <motion.div
+        className={styles.actions}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3 }}
+      >
         <button className={styles.primaryButton} onClick={handleCreateRoom}>
           <MdVideoCall size={24} />
-          Create New Room
+          Create Room
           <MdArrowForward size={20} />
         </button>
 
         <div className={styles.secondaryActions}>
           <button className={styles.secondaryButton}>
             <MdMic size={20} />
-            How it Works?
+            How it Works
           </button>
-          <button 
+          <button
             className={styles.secondaryButton}
             onClick={() => setShowCameraTest(true)}
           >
@@ -141,36 +117,55 @@ export const Landing = ({ onStartCall }: LandingProps) => {
             Test Camera
           </button>
         </div>
+      </motion.div>
+
+      <motion.div
+        className={styles.joinRoomSection}
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <h3 className={styles.joinTitle}>Join a Room</h3>
+        <div className={styles.joinInputContainer}>
+          <input
+            className={styles.joinInput}
+            placeholder="Enter or paste room ID..."
+            type="text"
+            value={joinRoomId}
+            onChange={(e) => setJoinRoomId(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleJoinRoom()}
+            onPaste={handlePaste}
+          />
+          <button
+            className={styles.joinButton}
+            disabled={!joinRoomId.trim()}
+            onClick={handleJoinRoom}
+          >
+            Join
+          </button>
+        </div>
+      </motion.div>
+
+      <div className={styles.features}>
+        {features.map((feature, index) => (
+          <motion.div
+            key={index}
+            className={styles.feature}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 200 }}
+          >
+            <div className={styles.featureIcon}>{feature.icon}</div>
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </motion.div>
+        ))}
       </div>
 
-      <div className={styles.joinRoomSection}>
-        <h3 className={styles.joinTitle}>Join Existing Room</h3>
-        <input
-          className={styles.joinInput}
-          placeholder="Paste room ID here..."
-          type="text"
-          value={joinRoomId}
-          onChange={(e) => setJoinRoomId(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleJoinRoom()}
-          onPaste={handlePaste}
-        />
-        <button 
-          className={styles.joinButton}
-          disabled={!joinRoomId.trim()}
-          onClick={handleJoinRoom}
-        >
-          Join Room
-        </button>
-      </div>
+      <footer className={styles.footer}>
+        <p>🚀 Built with React + TypeScript + WebRTC</p>
+      </footer>
 
-      <div className={styles.footer}>
-        🚀 Built with React + TypeScript + WebRTC
-      </div>
-
-        {showCameraTest && (
-          <CameraTest onClose={() => setShowCameraTest(false)} />
-        )}
-      </div>
+      {showCameraTest && <CameraTest onClose={() => setShowCameraTest(false)} />}
     </div>
   );
 };
